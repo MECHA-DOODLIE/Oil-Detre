@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skimmer Device 2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>Skimmer Device 2</h1>
+        <nav class="navbar">
+            <a href="index.html">Home</a>
+            <a href="index.html#devices">Devices</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Device Data Section -->
+    <section class="main-section">
+        <h1>Device Data</h1>
+        <button id="fetch-data-btn" class="btn">Fetch Latest Data</button>
+        <div class="device-container">
+            <div class="device-block">
+                <h3>GPS</h3>
+                <p id="gps-data">Real-time GPS Location: lat: 28.73 , lng: -88.36</p>
+                <a href="gps2.html" class="view-btn">View GPS Data</a>
+            </div>
+
+            <div class="device-block">
+                <h3>Ultrasonic Readings</h3>
+                <p id="ultrasonic-data">Sensor Data: 15 m depth, 98% oil density detected</p>
+            </div>
+
+            <div class="device-block">
+                <h3>Cloud Data History</h3>
+                <p id="cloud-data">Last Sync: 5 seconds ago, Data Uploaded</p>
+                <a href="cloud2.html" class="view-btn">View Cloud Data</a>
+            </div>
+
+            <div class="device-block">
+                <h3>Time</h3>
+                <h2>(in Sec)</h2>
+                <p id="Time">3 Sec</p>
+            </div>
+
+            <div class="device-block">
+                <h3>Oil Collected</h3>
+                <h2>(in Litres)</h2>
+                <p id="oil-collected">2 Litre</p>
+            </div>
+
+            <div class="device-block">
+                <h3>Skimmer Status</h3>
+                <p id="skimmer-status">On/Off</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Autonomous Skimmer Monitoring</p>
+    </footer>
+
+    <script>
+        const apiUrl = 'https://cdbc8b8i0d.execute-api.us-east-1.amazonaws.com/Spot02-stage01';  // Your API URL
+
+        let currentIndex = 0;
+        let fetchedData = [];
+
+        document.getElementById('fetch-data-btn').addEventListener('click', () => {
+            if (fetchedData.length === 0) {
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);  // Log the fetched data to inspect structure
+                        fetchedData = data;
+                        updateDashboard(fetchedData[currentIndex]);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            } else {
+                currentIndex = (currentIndex + 1) % fetchedData.length;
+                updateDashboard(fetchedData[currentIndex]);
+            }
+        });
+
+        function updateDashboard(data) {
+            console.log('Updating dashboard with data:', data);
+
+                    // Update the device blocks with the latest data
+                    // document.getElementById('gps-data').textContent = `Real-time GPS Location: ${latestData.Loc}`;
+                    // document.getElementById('ultrasonic-data').textContent = `Sensor Data: ${latestData.Ultra} m depth`;
+                    // document.getElementById('cloud-data').textContent = `Last Sync: ${latestData.Time} minutes ago, Data Uploaded`;
+                    // document.getElementById('uv-data').textContent = `Oil detected via UV: ${latestData.Skim === 'On' ? 'Yes' : 'No'}`;
+                    // document.getElementById('movement-data').textContent = `Status: ${latestData.Skim === 'On' ? 'Removing Oil Spill' : 'Idle'}`;
+                    // document.getElementById('skimmer-data').textContent = `Status: ${latestData.Skim}, Oil Collection at ${latestData.Oil}%`;
+
+                    document.getElementById('gps-data').textContent = data["Loc"] || 'N/A';
+                    document.getElementById('ultrasonic-data').textContent = data["Ultra"] || 'N/A';
+                    document.getElementById('Time').textContent = data["Time"] || 'N/A';
+                    document.getElementById('oil-collected').textContent = data["Oil"] || '0';
+                    document.getElementById('skimmer-status').textContent = data["Skim"] || 'N/A';
+                }
+               
+        
+    </script>
+
+</body>
+</html>

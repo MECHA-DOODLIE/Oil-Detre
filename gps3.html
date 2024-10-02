@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Tracking</title>
+    <!-- Add your Google Maps API key here -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBktVxXn2e2H-iOkxqmMPAr17e2ZCwbJhE"></script>
+    <script>
+        // Function to initialize the map and display the GPS coordinates
+        function initMap() {
+            // Dynamic coordinates - Replace with real-time data (you can fetch from a server)
+            var skimmerLocation = { lat: 13.228, lng: 80.363 }; // Chennai Coast
+
+            // Create the map centered at the skimmer's location
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: skimmerLocation
+            });
+
+            // Add a marker at the skimmer's location
+            var marker = new google.maps.Marker({
+                position: skimmerLocation,
+                map: map
+            });
+        }
+    </script>
+    
+</head>
+<body onload="initMap()">
+    <h1>Live GPS Tracking</h1>
+    <div id="map" style="height:500px;width:100%;"></div>
+</body>
+</html>

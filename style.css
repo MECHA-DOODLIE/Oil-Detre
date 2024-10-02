@@ -1,0 +1,128 @@
+/* General Body Styling */
+body {
+    background: linear-gradient(to right, #e0f7fa, #006064); /* Water-themed gradient */
+    font-family: 'Arial', sans-serif;
+    color: #004d40;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #004d40;
+    color: white;
+    padding: 1rem 2rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+}
+
+/* Navbar Styling */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    background-color: #00796b;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #004d40;
+}
+
+/* Main Section Styling */
+.main-section {
+    padding: 2rem;
+    text-align: center;
+    background-color: #e0f7fa; /* Light ocean blue */
+}
+
+.device-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.device-block {
+    border: 2px solid #00796b; /* Dark green for environment */
+    background-color: #80cbc4; /* Lighter green for contrast */
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 25%;
+    margin: 1rem;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out; /* Add animation */
+}
+
+.device-block:hover {
+    transform: translateY(-10px); /* Lifting effect on hover */
+}
+
+.device-block h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: #004d40; /* Darker green for text */
+}
+
+.device-block p {
+    font-size: 1.4rem;
+    color: #004d40;
+}
+
+.view-btn {
+    background-color: #004d40; /* Dark green button */
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.view-btn:hover {
+    background-color: #00332f; /* Darker green on hover */
+}
+
+/* About Section */
+.about-section {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: #004d40; /* Dark green ocean theme */
+    color: white;
+}
+
+.about-section h2 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-section p {
+    font-size: 1.6rem;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    background-color: #004d40;
+    color: white;
+    padding: 1rem;
+    margin-top: 2rem;
+}

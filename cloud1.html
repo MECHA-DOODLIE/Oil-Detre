@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skimmer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #005f73;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .details {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+        }
+
+        .chart-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chart {
+            margin: 20px 0;
+            width: 90%;
+            height: 400px;
+            padding: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #005f73;
+            color: white;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #005f73;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cloud Data History</h1>
+    </header>
+
+    <section class="details">
+        <h2>Oil Spill Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Oil ID</th>
+                    <th>Skimmer Status</th>
+                    <th>Oil Collected</th>
+                    <th>Time</th>
+                    <th>Location</th>
+                    <th>Ultrasonic Reading</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
+    </section>
+
+    <section class="chart-container">
+        <h2>Visual Analysis of Oil Spill Data</h2>
+        <canvas id="oilCollectedChart" class="chart"></canvas>
+        <canvas id="ultrasonicReadingChart" class="chart"></canvas>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Skimmer Dashboard | Powered by Your Company</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const apiUrl = 'https://p60ypjrh30.execute-api.us-east-1.amazonaws.com/Spot01-Stage01';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('data-table');
+                    const oilData = [];
+                    const ultraData = [];
+
+                    data.forEach(record => {
+                        let row = `
+                            <tr>
+                                <td>${record.Oil_ID}</td>
+                                <td>${record.Skim}</td>
+                                <td>${record.Oil}</td>
+                                <td>${record.Time}</td>
+                                <td>${record.Loc}</td>
+                                <td>${record.Ultra}</td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+
+                        oilData.push(record.Oil);
+                        ultraData.push(record.Ultra);
+                    });
+
+                    // Gradient background for Oil Collected Chart
+                    const oilCollectedCtx = document.getElementById('oilCollectedChart').getContext('2d');
+                    const oilGradient = oilCollectedCtx.createLinearGradient(0, 0, 0, 400);
+                    oilGradient.addColorStop(0, 'rgba(75, 192, 192, 0.6)');
+                    oilGradient.addColorStop(1, 'rgba(75, 192, 192, 0)');
+
+                    new Chart(oilCollectedCtx, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({ length: data.length }, (_, i) => i + 1),
+                            datasets: [{
+                                label: 'Oil Collected (Liters)',
+                                data: oilData,
+                                backgroundColor: oilGradient,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: '#005f73',
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Gradient background for Ultrasonic Reading Chart
+                    const ultraReadingCtx = document.getElementById('ultrasonicReadingChart').getContext('2d');
+                    const ultraGradient = ultraReadingCtx.createLinearGradient(0, 0, 0, 400);
+                    ultraGradient.addColorStop(0, 'rgba(153, 102, 255, 0.6)');
+                    ultraGradient.addColorStop(1, 'rgba(153, 102, 255, 0)');
+
+                    new Chart(ultraReadingCtx, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({ length: data.length }, (_, i) => i + 1),
+                            datasets: [{
+                                label: 'Ultrasonic Reading',
+                                data: ultraData,
+                                backgroundColor: ultraGradient,
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 2,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: false
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: '#7a5195',
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>

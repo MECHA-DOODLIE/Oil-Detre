@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skimmer Data Dashboard</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #005f73;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 22%;
+        }
+
+        .card h2 {
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #005f73;
+        }
+
+        .details {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .details h2 {
+            margin-bottom: 20px;
+            color: #005f73;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+        }
+
+        .btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #005f73;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Skimmer Monitoring Dashboard</h1>
+    </header>
+
+    <!-- Summary of skimmer status -->
+    <section class="summary">
+        <div class="card">
+            <h2>Skimmer Status</h2>
+            <p id="skim-status">Unknown</p>
+        </div>
+        <div class="card">
+            <h2>Oil Collected</h2>
+            <p id="oil-collected">0 Liters</p>
+        </div>
+        <div class="card">
+            <h2>Ultrasonic Reading</h2>
+            <p id="ultra-reading">Unknown</p>
+        </div>
+        <div class="card">
+            <h2>Location</h2>
+            <p id="location">Unknown</p>
+        </div>
+    </section>
+
+    <!-- Detailed data -->
+    <section class="details">
+        <h2>Skimmer Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Oil Collected (Liters)</th>
+                    <th>Ultrasonic Reading</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody id="skimmer-data-table">
+                <!-- Data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </section>
+
+    <button class="btn" id="fetch-data-btn">Fetch Latest Data</button>
+
+    <a href="index.html" class="back-button">Go Back to Main</a>
+
+    <script>
+        const apiUrl = 'https://p60ypjrh30.execute-api.us-east-1.amazonaws.com/Spot01-Stage01';  // Your API URL
+
+        let currentIndex = 0;
+        let fetchedData = [];
+
+        document.getElementById('fetch-data-btn').addEventListener('click', () => {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    fetchedData = data;
+                    updateDashboard(fetchedData[currentIndex]);
+                    populateTable(fetchedData);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+        function updateDashboard(data) {
+            document.getElementById('skim-status').textContent = data.Skim || 'Unknown';
+            document.getElementById('oil-collected').textContent = data.Oil + ' Liters' || '0 Liters';
+            document.getElementById('ultra-reading').textContent = data.Ultra || 'Unknown';
+            document.getElementById('location').textContent = data.Loc || 'Unknown';
+        }
+
+        function populateTable(data) {
+            const tableBody = document.getElementById('skimmer-data-table');
+            tableBody.innerHTML = '';  // Clear the table before populating
+
+            data.forEach(entry => {
+                let row = `<tr>
+                            <td>${entry.Time}</td>
+                            <td>${entry.Oil} Liters</td>
+                            <td>${entry.Ultra}</td>
+                            <td>${entry.Loc}</td>
+                          </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+    </script>
+</body>
+</html>
